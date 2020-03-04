@@ -99,7 +99,7 @@ class AttendSzer(serializers.ModelSerializer):
         ]
 
 class ConsultaSzer(serializers.ModelSerializer):
-    paciente = PatientSzer(read_only=True)
+    userapply = PatientSzer(read_only=True)
     sintomlist = SintomSzer(many=True, read_only=True)
     attender = AttendSzer(read_only=True)
     class Meta: 
@@ -107,11 +107,11 @@ class ConsultaSzer(serializers.ModelSerializer):
         fields = [
             'pk',
             'attender',
-            'paciente',
+            'userapply',
             'date_start',
             'date_end',
             'status',
-            'hipotesis',
+            'patient',
             'sintomlist',
         ]
 
@@ -124,11 +124,11 @@ class setConsultaSzer(serializers.ModelSerializer):
         fields = [
             'pk',
             'attender',
-            'paciente',
+            'userapply',
             'date_start',
             'date_end',
             'status',
-            'hipotesis',
+            'patient',
         ]
 
 
@@ -138,7 +138,7 @@ class SingleConsultaSzer(serializers.ModelSerializer):
         model = Consulta
         fields = [
             'pk',
-            'paciente',
+            'userapply',
             'date_start',
             'status'
         ]

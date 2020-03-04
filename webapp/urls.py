@@ -18,7 +18,7 @@ urlpatterns = [
 	#PATIENT ----------------------------------------------------------------------------
 
 	path('patient/myappointments/', MyAppointments.as_view()),
-	path('patient/doctors/', DoctorList.as_view()),
+	path('patient/doctors/<int:consultapk>/', DoctorList.as_view()),
 
 	#END PATINET ________________________________________________________________________
 

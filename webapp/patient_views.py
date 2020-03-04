@@ -6,7 +6,7 @@ from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from webapp.models import (Medic)
+from webapp.models import (Medic, Consulta)
 '''
     HERE, you could add elements of a navigation structure, divides into:
     MAINSECTION (as usual, not navegable mode)
@@ -72,8 +72,34 @@ class MyAppointments(View):
 
 
 
-class DoctorList(View):
-    def get(self, request, *args, **kwargs):
+class Inteligence:
+    SPECIAL = [u'Cardiólogo',u'Pediatra',u'Neurólogo',u'Ortopedista','Medicina General','Psicología','Psiquiatría']
+
+    specialities = {
+            'dolor-cabeza':'Medicina General',
+            'dolor-corazon':'Cardiólogo',
+            'vomito':'Medicina General',
+            'diarrea':'Medicina General',
+            'contractura':'Ortopedista',
+            'depresion':'Psicología',
+            'violencia':'Psicología',
+            'dolor-cuerpo':'Medicina General',
+        }
+
+
+
+class DoctorList(View,Inteligence):
+    def get(self, request, consultapk=None, *args, **kwargs):
+        c = Consulta.objects.get(pk=consultapk)
+        specialkwords = ['%s-%s'%(x.sintoma, x.zona) for x in c.sintomlist.all()]
+        spk = []
+        for x in list(set(specialkwords)):                
+            try: 
+                p = self.specialities[x]
+                spk.append(p)
+            except:
+                next
+
 
         doctors_list = [
             {'speciality':medic.speciality,
@@ -81,6 +107,6 @@ class DoctorList(View):
              'name':'%s %s'%(medic.userpk.first_name, medic.userpk.last_name )
              
             }
-            for medic in Medic.objects.all() 
+            for medic in Medic.objects.filter(speciality__in=spk)
         ]
         return JsonResponse(doctors_list, safe=False)

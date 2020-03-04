@@ -27,11 +27,11 @@ class HealthInfo(models.Model):
     )
 
 class Consulta(models.Model):
-    paciente = models.ForeignKey(Patient, related_name='pacientepk', on_delete=models.CASCADE)
+    userapply = models.ForeignKey(User, related_name='pacientepk', on_delete=models.CASCADE)
     date_start = models.DateTimeField(auto_now_add=True)
     date_end = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=10)
-    hipotesis = models.TextField(blank=True, null=True)
+    patient = models.TextField(blank=True, null=True)
 
 class Sintom(models.Model):
     consultapk = models.ForeignKey(Consulta, related_name='sintomlist', on_delete=models.CASCADE)
