@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 from webapp import views
 from rest_framework_jwt.views import obtain_jwt_token
-from webapp.patient_views import ( MyAppointments )
+from webapp.patient_views import ( MyAppointments, DoctorList )
 
 urlpatterns = [
 	path('get_user/<int:pk>/', views.getUser.as_view()),
@@ -18,6 +18,7 @@ urlpatterns = [
 	#PATIENT ----------------------------------------------------------------------------
 
 	path('patient/myappointments/', MyAppointments.as_view()),
+	path('patient/doctors/', DoctorList.as_view()),
 
 	#END PATINET ________________________________________________________________________
 

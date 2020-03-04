@@ -7,6 +7,8 @@ class Medic(models.Model):
     speciality = models.TextField()
     title = models.TextField()
     contactinfo = models.TextField()
+    location = models.TextField(blank=True,null=True)
+    keywords = models.TextField(blank=True,null=True)
 
 class Patient(models.Model):
     userpk = models.ForeignKey(User, related_name='user_general', on_delete=models.CASCADE)

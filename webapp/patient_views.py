@@ -1,11 +1,12 @@
+from django.contrib.auth.models import User
+from django.views import View
+from django.http import  JsonResponse
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.views import View
-from django.http import  JsonResponse
-
+from webapp.models import (Medic)
 '''
     HERE, you could add elements of a navigation structure, divides into:
     MAINSECTION (as usual, not navegable mode)
@@ -69,3 +70,17 @@ class MyAppointments(View):
         ]
         return JsonResponse(appointments, safe=False)#self.list(request, *args, **kwargs)
 
+
+
+class DoctorList(View):
+    def get(self, request, *args, **kwargs):
+
+        doctors_list = [
+            {'speciality':medic.speciality,
+             'title':medic.title,
+             'name':'%s %s'%(medic.userpk.first_name, medic.userpk.last_name )
+             
+            }
+            for medic in Medic.objects.all() 
+        ]
+        return JsonResponse(doctors_list, safe=False)
