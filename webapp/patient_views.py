@@ -6,6 +6,7 @@ from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+import simplejson
 from webapp.models import (Medic, Consulta)
 '''
     HERE, you could add elements of a navigation structure, divides into:
@@ -110,6 +111,8 @@ class DoctorList(View,Inteligence):
 class setPatient(View,Inteligence):
     def post(self, request, consultapk=None, *args, **kwargs):
         c = Consulta.objects.get(pk=consultapk)
-        patientinfo = request.POST.get()
-        return JsonResponse(doctors_list, safe=False)
+        patientinfo = request.POST.get('patient_info')
+        c.patient = patientinfo 
+        assert False,patientinfo
+        return JsonResponse({'done':True}, safe=False)
 

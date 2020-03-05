@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User,Group
-
+import simplejson
 
 class Medic(models.Model):
     userpk = models.ForeignKey(User, related_name='medic_user', on_delete=models.CASCADE)
@@ -32,6 +32,10 @@ class Consulta(models.Model):
     date_end = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=10)
     patient = models.TextField(blank=True, null=True)
+
+    def patient_name(self):
+        paciente = simplejson.loads(self.patient)
+        return paciente['name']
 
 class Sintom(models.Model):
     consultapk = models.ForeignKey(Consulta, related_name='sintomlist', on_delete=models.CASCADE)

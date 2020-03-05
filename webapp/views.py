@@ -12,21 +12,12 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 
+import simplejson
+from webapp.models import (Consulta, Sintom, Patient, Medic, Attend)
 
-from webapp.models import Consulta
-from webapp.models import Sintom
-from webapp.models import Patient
-from webapp.models import Medic
-from webapp.models import Attend
-
-from webapp.serializers import UserSzer
-from webapp.serializers import ConsultaSzer
-from webapp.serializers import PatientSzer
-from webapp.serializers import SintomSzer
-from webapp.serializers import MedicSzer
-from webapp.serializers import AttendSzer
-from webapp.serializers import setConsultaSzer
-from webapp.serializers import SingleConsultaSzer
+from webapp.serializers import (UserSzer, ConsultaSzer, PatientSzer,
+                                SintomSzer, MedicSzer, AttendSzer,
+                                setConsultaSzer, SingleConsultaSzer)
 
 
 '''
@@ -100,6 +91,11 @@ class addSintom(mixins.ListModelMixin,
 
     def get(self, request, pk=None, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+    def delete(self, request, pk=None, *args, **kwargs):
+        event = self.get_object()
+        event.delete()
+        return self.list(request, *args, **kwargs) 
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -199,6 +195,16 @@ class setConsulta(
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+
+    def put(self, request, *args, **kwargs):
+        obj = self.queryset.get(pk=request.data['consultapk'])
+        paciente_info = simplejson.dumps(request.data['patient_info'],True)
+        obj.patient = paciente_info
+        obj.save()
+        return self.list(request, *args, **kwargs)
+
+
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)

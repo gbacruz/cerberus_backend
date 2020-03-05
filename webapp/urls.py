@@ -9,7 +9,10 @@ urlpatterns = [
 	path('consultas/', views.getConsulta.as_view()),
 	path('patients/', views.getPatients.as_view()),
 	path('getpatients/<int:pk>/', views.getMyPatients.as_view()),
+
 	path('addsintom/<int:pk>/', views.addSintom.as_view()),
+	#path('rmsintom/<int:pk>/', views.rmSintom.as_view()),
+
 	path('medic/<int:pk>/', views.Medicinfo.as_view()),
 	path('attend/', views.AttendenConsult.as_view()),
     path('manual_auth/', views.getUser.as_view()),
