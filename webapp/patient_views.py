@@ -70,8 +70,6 @@ class MyAppointments(View):
         ]
         return JsonResponse(appointments, safe=False)#self.list(request, *args, **kwargs)
 
-
-
 class Inteligence:
     SPECIAL = [u'Cardiólogo',u'Pediatra',u'Neurólogo',u'Ortopedista','Medicina General','Psicología','Psiquiatría']
 
@@ -85,8 +83,6 @@ class Inteligence:
             'violencia':'Psicología',
             'dolor-cuerpo':'Medicina General',
         }
-
-
 
 class DoctorList(View,Inteligence):
     def get(self, request, consultapk=None, *args, **kwargs):
@@ -110,3 +106,10 @@ class DoctorList(View,Inteligence):
             for medic in Medic.objects.filter(speciality__in=spk)
         ]
         return JsonResponse(doctors_list, safe=False)
+
+class setPatient(View,Inteligence):
+    def post(self, request, consultapk=None, *args, **kwargs):
+        c = Consulta.objects.get(pk=consultapk)
+        patientinfo = request.POST.get()
+        return JsonResponse(doctors_list, safe=False)
+
