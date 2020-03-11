@@ -64,14 +64,12 @@ class ImeasureSzer(serializers.ModelSerializer):
 class PatientSzer(serializers.ModelSerializer):
     
     class Meta: 
-        model = Patient
+        model = User
         fields = [
             'pk',
-            'name',
-            'age',
-            'gender',
-            'userpk',
-            
+            'first_name',
+            'username',
+            'email',
         ]
 
 class SintomSzer(serializers.ModelSerializer):
@@ -119,6 +117,9 @@ class ConsultaSzer(serializers.ModelSerializer):
 
 class setConsultaSzer(serializers.ModelSerializer):
     attender = AttendSzer(read_only=True)
+    userapply = PatientSzer(read_only=True)
+    sintomlist = SintomSzer(many=True, read_only=True)
+
     class Meta: 
         model = Consulta
         fields = [
@@ -127,8 +128,8 @@ class setConsultaSzer(serializers.ModelSerializer):
             'userapply',
             'date_start',
             'date_end',
+            'sintomlist',
             'status',
-            'patient',
         ]
 
 

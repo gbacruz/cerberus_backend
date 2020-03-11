@@ -10,6 +10,16 @@ class Medic(models.Model):
     location = models.TextField(blank=True,null=True)
     keywords = models.TextField(blank=True,null=True)
 
+    def __unicode__(self):
+        return self.userpk.username
+
+
+class MedicSym(models.Model):
+    medico = models.ForeignKey(Medic, on_delete=models.CASCADE)
+    symptom = models.CharField(u'sym', max_length=500, default="dolor")
+    level = models.IntegerField(default=20)
+
+
 class Patient(models.Model):
     userpk = models.ForeignKey(User, related_name='user_general', on_delete=models.CASCADE)
     age = models.IntegerField()
