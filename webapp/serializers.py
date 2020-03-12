@@ -117,7 +117,7 @@ class ConsultaSzer(serializers.ModelSerializer):
 
 class setConsultaSzer(serializers.ModelSerializer):
     attender = AttendSzer(read_only=True)
-    userapply = PatientSzer(read_only=True)
+    #userapply = PatientSzer()
     sintomlist = SintomSzer(many=True, read_only=True)
 
     class Meta: 

@@ -196,15 +196,12 @@ class setConsulta(
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
-
     def put(self, request, *args, **kwargs):
         obj = self.queryset.get(pk=request.data['consultapk'])
         paciente_info = simplejson.dumps(request.data['patient_info'],True)
         obj.patient = paciente_info
         obj.save()
         return self.list(request, *args, **kwargs)
-
-
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)

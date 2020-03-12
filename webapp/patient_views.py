@@ -73,21 +73,9 @@ class MyAppointments(View):
         ]
         return JsonResponse(appointments, safe=False)#self.list(request, *args, **kwargs)
 
-class Inteligence:
-    SPECIAL = [u'Cardiólogo',u'Pediatra',u'Neurólogo',u'Ortopedista','Medicina General','Psicología','Psiquiatría']
 
-    specialities = {
-            'dolor-cabeza':'Medicina General',
-            'dolor-corazon':'Cardiólogo',
-            'vomito':'Medicina General',
-            'diarrea':'Medicina General',
-            'contractura':'Ortopedista',
-            'depresion':'Psicología',
-            'violencia':'Psicología',
-            'dolor-cuerpo':'Medicina General',
-        }
 
-class DoctorList(View,Inteligence):
+class DoctorList(View):
     def get(self, request, consultapk=None, *args, **kwargs):
         c = Consulta.objects.get(pk=consultapk)
         qs = Q()
@@ -100,21 +88,22 @@ class DoctorList(View,Inteligence):
         if len(qs)==0:
             return JsonResponse(medicos, safe=False)
 
-        pred = Prediagnostic.objects.filter(qs).select_related()
+        pred = Prediagnostic.objects.filter(qs).distinct()
         for p in pred:
-            diagnosis = p.special.all()
+            diagnosis = p.special.all().distinct()
             for d in diagnosis:
                 
-                for m in d.specialmedic_set.all():
+                for m in d.specialmedic_set.all().distinct():
                     med = {'speciality':m.special.speciality,
                         'title':m.medicpk.title,
-                        'name':'%s %s'%(m.medicpk.userpk.first_name, m.medicpk.userpk.last_name)
+                        'name':'%s %s'%(m.medicpk.userpk.first_name, m.medicpk.userpk.last_name),
+                        'medic_pk':m.medicpk.userpk.id
                         }
 
                     medicos.append(med)    
         return JsonResponse(medicos, safe=False)
 
-class setPatient(View,Inteligence):
+class setPatient(View):
     def post(self, request, consultapk=None, *args, **kwargs):
         c = Consulta.objects.get(pk=consultapk)
         patientinfo = request.POST.get('patient_info')

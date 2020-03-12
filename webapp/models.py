@@ -55,11 +55,12 @@ class HealthInfo(models.Model):
     )
 
 class Consulta(models.Model):
-    userapply = models.ForeignKey(User, related_name='pacientepk', on_delete=models.CASCADE)
+    userapply = models.ForeignKey(User, related_name='paciente_pk', on_delete=models.CASCADE)
     date_start = models.DateTimeField(auto_now_add=True)
     date_end = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=10)
     patient = models.TextField(blank=True, null=True)
+
 
     def patient_name(self):
         paciente = simplejson.loads(self.patient)
