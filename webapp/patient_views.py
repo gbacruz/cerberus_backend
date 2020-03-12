@@ -1,4 +1,6 @@
 from django.contrib.auth.models import User
+from django.db.models import Q
+from django.template.defaultfilters import slugify
 from django.views import View
 from django.http import  JsonResponse
 from rest_framework import mixins
@@ -7,7 +9,7 @@ from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import simplejson
-from webapp.models import (Medic, Consulta)
+from webapp.models import *
 '''
     HERE, you could add elements of a navigation structure, divides into:
     MAINSECTION (as usual, not navegable mode)
@@ -88,25 +90,29 @@ class Inteligence:
 class DoctorList(View,Inteligence):
     def get(self, request, consultapk=None, *args, **kwargs):
         c = Consulta.objects.get(pk=consultapk)
-        specialkwords = ['%s-%s'%(x.sintoma, x.zona) for x in c.sintomlist.all()]
-        spk = []
-        for x in list(set(specialkwords)):                
-            try: 
-                p = self.specialities[x]
-                spk.append(p)
-            except:
-                next
+        qs = Q()
+        medicos = []
+        sintoms = [slugify(x.sintoma) for x in c.sintomlist.all()]
+        for x in sintoms:
+            qs |= Q(names__icontains=x)
 
+        print(qs)
+        if len(qs)==0:
+            return JsonResponse(medicos, safe=False)
 
-        doctors_list = [
-            {'speciality':medic.speciality,
-             'title':medic.title,
-             'name':'%s %s'%(medic.userpk.first_name, medic.userpk.last_name )
-             
-            }
-            for medic in Medic.objects.filter(speciality__in=spk)
-        ]
-        return JsonResponse(doctors_list, safe=False)
+        pred = Prediagnostic.objects.filter(qs).select_related()
+        for p in pred:
+            diagnosis = p.special.all()
+            for d in diagnosis:
+                
+                for m in d.specialmedic_set.all():
+                    med = {'speciality':m.special.speciality,
+                        'title':m.medicpk.title,
+                        'name':'%s %s'%(m.medicpk.userpk.first_name, m.medicpk.userpk.last_name)
+                        }
+
+                    medicos.append(med)    
+        return JsonResponse(medicos, safe=False)
 
 class setPatient(View,Inteligence):
     def post(self, request, consultapk=None, *args, **kwargs):

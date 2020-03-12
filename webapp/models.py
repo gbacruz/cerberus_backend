@@ -2,17 +2,35 @@ from django.db import models
 from django.contrib.auth.models import User,Group
 import simplejson
 
+
+class Specialist(models.Model):
+    speciality = models.CharField(max_length=200,default='General')
+
+    def __str__(self):
+        return self.speciality
+
+class Prediagnostic(models.Model):
+    names = models.TextField(blank=True, null=True)
+    predg = models.CharField(max_length=500)
+    special = models.ManyToManyField(Specialist)
+    level_up = models.IntegerField(default=100)
+
 class Medic(models.Model):
     userpk = models.ForeignKey(User, related_name='medic_user', on_delete=models.CASCADE)
-    speciality = models.TextField()
     title = models.TextField()
     contactinfo = models.TextField()
     location = models.TextField(blank=True,null=True)
     keywords = models.TextField(blank=True,null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.userpk.username
 
+
+
+class SpecialMedic(models.Model):
+    medicpk = models.ForeignKey(Medic, on_delete=models.CASCADE)
+    special = models.ForeignKey(Specialist, on_delete=models.CASCADE)
+    level_up = models.IntegerField(default=100)
 
 class MedicSym(models.Model):
     medico = models.ForeignKey(Medic, on_delete=models.CASCADE)
@@ -68,4 +86,5 @@ class Medication(models.Model):
     cuantity = models.CharField(max_length=200)
     regularity = models.CharField(max_length=100)
     temporarity = models.CharField(max_length=100)
-    
+
+

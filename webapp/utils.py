@@ -68,4 +68,5 @@ class Intelligence:
             sym = x.sintoma
             zone = x.zona
         if zone:
+            pass
             
